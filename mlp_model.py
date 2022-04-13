@@ -1,9 +1,10 @@
 from time import time
+from typing import Callable
 
 import numpy as np
 
 
-def softmax(a):
+def softmax(a: np.array) -> np.array:
     """
     Softmax function.
 
@@ -19,7 +20,7 @@ def softmax(a):
     return y
 
 
-def cross_entropy(y, y_predicted):
+def cross_entropy(y: np.array, y_predicted: np.array) -> float:
     """
     cross-entropy loss function.
 
@@ -30,14 +31,14 @@ def cross_entropy(y, y_predicted):
 
     Returns
     -------
-    entropy : Int, cross-entropy loss
+    entropy : float, cross-entropy loss
     """
     log_y = np.log(y_predicted)
     entropy = -np.sum(y * log_y) / y.shape[0]
     return entropy
 
 
-def accuracy(y, y_predicted):
+def accuracy(y: np.array, y_predicted: np.array) -> np.array:
     """
     Calculates accuracy via comparison with the classification index.
 
@@ -48,14 +49,16 @@ def accuracy(y, y_predicted):
 
     Returns
     -------
-    acc : Int, Accuracy
+    acc : h_out-dimensional array, Accuracy
     """
     logical_arr = np.argmax(y, axis=1) == np.argmax(y_predicted, axis=1)
     acc = np.mean(logical_arr)
     return acc
 
 
-def get_batch(x, y, batch_size=128):
+def get_batch(
+    x: np.array, y: np.array, batch_size: int = 128
+) -> tuple[np.array, np.array]:
     """
     Get x and y batch from dataset.
 
@@ -77,11 +80,9 @@ def get_batch(x, y, batch_size=128):
 
 
 class DenseLayer:
-    """
-    Dense layer object class.
-    """
+    """Dense layer object class."""
 
-    def __init__(self, h_in, h_out, activation):
+    def __init__(self, h_in: int, h_out: int, activation: Callable):
         """
         Dense layer initialisation.
 
@@ -100,11 +101,9 @@ class DenseLayer:
 
 
 class MlpModel:
-    """
-    Multi-layer perceptron model object class.
-    """
+    """Multi-layer perceptron model object class."""
 
-    def __init__(self, input_size):
+    def __init__(self, input_size: int):
         """
         Multi-layer perceptron model initialisation.
 
@@ -123,7 +122,7 @@ class MlpModel:
         ]
         self.num_layers = len(self.model)
 
-    def predict(self, x):
+    def predict(self, x: np.array) -> np.array:
         """
         Predict using Multi-layer perceptron model.
 
@@ -142,13 +141,13 @@ class MlpModel:
 
     def train(
         self,
-        x_train,
-        y_train,
-        x_val,
-        y_val,
-        batch_size=128,
-        epochs=40,
-        learning_rate=0.01,
+        x_train: np.array,
+        y_train: np.array,
+        x_val: np.array,
+        y_val: np.array,
+        batch_size: int = 128,
+        epochs: int = 40,
+        learning_rate: float = 0.01,
     ):
         """
         Train MLP model using SGD.
@@ -161,7 +160,7 @@ class MlpModel:
         y_val : K x h_out-dimensional array of validation outputs
         batch_size : Int, Size of the batches used in SGD
         epochs : Int, Number of epochs
-        learning_rate : Int, rate of learning for SGD
+        learning_rate : float, rate of learning for SGD
 
         Returns
         -------
@@ -191,9 +190,7 @@ class MlpModel:
                     grad_w = (h[k].T @ delta) / batch_size
                     grad_b = np.mean(delta, axis=0)
                     # Calculate the next delta
-                    if k == 0:
-                        pass
-                    else:
+                    if k != 0:
                         delta = (1 - np.tanh(a[k]) ** 2) * (delta @ layer.W.T)
                     # Apply gradients
                     layer.W -= learning_rate * grad_w
