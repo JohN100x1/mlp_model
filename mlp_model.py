@@ -19,38 +19,38 @@ def softmax(a):
     return y
 
 
-def cross_entropy(y, y_pred):
+def cross_entropy(y, y_predicted):
     """
     cross-entropy loss function.
 
     Parameters
     ----------
     y : K x h_out-dimensional output array
-    y_pred : K x h_out-dimensional predicted output array
+    y_predicted : K x h_out-dimensional predicted output array
 
     Returns
     -------
-    L : Int, cross-entropy loss
+    entropy : Int, cross-entropy loss
     """
-    log_y = np.log(y_pred)
-    L = -np.sum(y * log_y) / y.shape[0]
-    return L
+    log_y = np.log(y_predicted)
+    entropy = -np.sum(y * log_y) / y.shape[0]
+    return entropy
 
 
-def accuracy(y, y_pred):
+def accuracy(y, y_predicted):
     """
-    Calculates accuracy via comparison with the classfication index.
+    Calculates accuracy via comparison with the classification index.
 
     Parameters
     ----------
     y : K x h_out-dimensional output array
-    y_pred : K x h_out-dimensional predicted output array
+    y_predicted : K x h_out-dimensional predicted output array
 
     Returns
     -------
     acc : Int, Accuracy
     """
-    logical_arr = np.argmax(y, axis=1) == np.argmax(y_pred, axis=1)
+    logical_arr = np.argmax(y, axis=1) == np.argmax(y_predicted, axis=1)
     acc = np.mean(logical_arr)
     return acc
 
@@ -94,7 +94,7 @@ class DenseLayer:
         self.h_in = h_in
         self.h_out = h_out
         self.activation = activation
-        # Initialise W and b
+        # Initialize W and b
         self.W = np.random.uniform(-0.04, 0.04, size=(h_in, h_out))
         self.b = np.random.uniform(-0.04, 0.04, size=(h_out,))
 
@@ -142,9 +142,9 @@ class MlpModel:
 
     def train(
         self,
-        X_train,
+        x_train,
         y_train,
-        X_val,
+        x_val,
         y_val,
         batch_size=128,
         epochs=40,
@@ -155,9 +155,9 @@ class MlpModel:
 
         Parameters
         ----------
-        X_train : K x h_in-dimensional array of training inputs
+        x_train : K x h_in-dimensional array of training inputs
         y_train : K x h_out-dimensional array of training outputs
-        X_val : K x h_in-dimensional array of validation inputs
+        x_val : K x h_in-dimensional array of validation inputs
         y_val : K x h_out-dimensional array of validation outputs
         batch_size : Int, Size of the batches used in SGD
         epochs : Int, Number of epochs
@@ -168,13 +168,13 @@ class MlpModel:
         losses : 2 x L-dimensional array of training/validation losses
         accuracies : 2 x L-dimensional array of training/validation accuracies
         """
-        num_batches = X_train.shape[0] // batch_size
+        num_batches = x_train.shape[0] // batch_size
         losses = np.zeros((2, epochs))
         accuracies = np.zeros((2, epochs))
         for epoch in range(epochs):
             t0 = time()
             for batch in range(num_batches):
-                x_batch, y_batch = get_batch(X_train, y_train)
+                x_batch, y_batch = get_batch(x_train, y_train)
                 h = [x_batch]
                 a = [x_batch]
                 # Forward pass
@@ -201,13 +201,13 @@ class MlpModel:
             t1 = time()
             time_taken = t1 - t0
             # Training loss and accuracy
-            y_pred_train = self.predict(X_train)
-            losses[0, epoch] = cross_entropy(y_train, y_pred_train)
-            accuracies[0, epoch] = accuracy(y_train, y_pred_train)
+            y_predicted_train = self.predict(x_train)
+            losses[0, epoch] = cross_entropy(y_train, y_predicted_train)
+            accuracies[0, epoch] = accuracy(y_train, y_predicted_train)
             # Validation loss and accuracy
-            y_pred_val = self.predict(X_val)
-            losses[1, epoch] = cross_entropy(y_val, y_pred_val)
-            accuracies[1, epoch] = accuracy(y_val, y_pred_val)
+            y_predicted_val = self.predict(x_val)
+            losses[1, epoch] = cross_entropy(y_val, y_predicted_val)
+            accuracies[1, epoch] = accuracy(y_val, y_predicted_val)
             print(
                 f"Epoch: {epoch}",
                 f"Time taken: {time_taken}",
