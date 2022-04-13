@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "mlp_model"
 version = "0.1.0"
-description = "MlP model"
+description = "Mlp model"
 authors = ["JohN100x1 <JohN100x1@hotmail.co.uk>"]
 
 [tool.poetry.dependencies]
@@ -21,9 +21,4 @@ build-backend = "poetry.core.masonry.api"
 line-length = 79
 
 [tool.isort]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-ensure_newline_before_comments = true
-line_length = 79
+profile = "black"
