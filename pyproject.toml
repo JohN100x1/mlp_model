@@ -5,11 +5,11 @@ description = "Mlp model"
 authors = ["JohN100x1 <JohN100x1@hotmail.co.uk>"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 numpy = "^1.22.2"
 
 [tool.poetry.dev-dependencies]
-black = "^22.1.0"
+black = "^23.3.0"
 isort = "^5.10.1"
 pytest = "^7.0.0"
 
